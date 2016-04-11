@@ -18,7 +18,11 @@ public class DocUtil {
     private static final Integer TIMEOUT = 10000;
 
     public static Document getDocument(String url) throws IOException{
-
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return Jsoup
                 .connect(ScraperConstants.URL + url)
                 .timeout(TIMEOUT)

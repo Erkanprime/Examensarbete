@@ -61,7 +61,7 @@ public class TradeItem implements Serializable{
     @Column(name = "VERIFIED")
     private Boolean verified;
 
-    @Column(name = "ICON")
+    @Column(name = "ICON", length = 500)
     private String icon;
 
     @Column(name = "IDENTIFIED")

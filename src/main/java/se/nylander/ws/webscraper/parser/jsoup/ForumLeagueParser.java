@@ -10,11 +10,10 @@ import se.nylander.ws.webscraper.config.ScraperConstants;
 import se.nylander.ws.webscraper.exception.JavascriptJsonFormatException;
 import se.nylander.ws.webscraper.model.Shop;
 import se.nylander.ws.webscraper.parser.jsoup.util.DocUtil;
+import se.nylander.ws.webscraper.service.ShopService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by erik.nylander on 2016-03-22.
@@ -27,6 +26,9 @@ public class ForumLeagueParser {
 
     @Autowired
     private ForumThreadParser forumThreadParser;
+
+    @Autowired
+    private ShopService shopService;
 
     public ForumLeagueParser(){}
 
@@ -55,7 +57,7 @@ public class ForumLeagueParser {
     /**
      * Fetches all trading-shop thread urls from a league
      */
-    public void startForumParsing(){
+    public void startForumParsing() {
 
         if (forumLinks.isEmpty()) {
             return;
@@ -64,34 +66,50 @@ public class ForumLeagueParser {
         List<Shop> indexedShops = new ArrayList<>();
         List<String> shopLinks = new ArrayList<>();
 
+
+
         for (String href : forumLinks.values()) {
 
-            log.info("###############################################");
-            log.info("####### Processing league: " + href);
-            log.info("###############################################");
+            final Optional<Shop> lastIndexShop = shopService.getLatestIndexed(href);
 
-            try {
-                forumThreadParser.setCurrentLeague(href);
-                shopLinks = forumThreadParser.extractShopLinks(href);
-            } catch (IOException e) {
-                log.warn("Coulden't parse/connect to League: " + ScraperConstants.URL + href + "\n", e);
-            }
+            for (int pageNumber=1; pageNumber < 3; pageNumber++) {
 
-            // Parse the content of each thread-post
-            if (!shopLinks.isEmpty()) {
-                shopLinks.stream().forEach(shopLink -> {
-                    log.info("###### Parsing forum thread: " + shopLink + " ######");
-                    try {
-                        indexedShops.add(forumThreadParser.readForumLinksShops(shopLink));
 
-                    } catch (Exception e) {
-                        log.warn("Couldent parse/connect to Thread: " + ScraperConstants.URL + shopLink + "\n");
+                log.info("###############################################");
+                log.info("####### Processing league: " + href + "/page/" + pageNumber);
+                log.info("###############################################");
+
+                try {
+                    forumThreadParser.setCurrentLeague(href);
+                    shopLinks = forumThreadParser.extractShopLinks(href + "/page/" + pageNumber);
+
+                    if (!lastIndexShop.isPresent()) {
+                        Collections.reverse(shopLinks); //Temporärt för första gången man kör
                     }
-                });
-            }
 
-            System.out.println("##");
+                } catch (IOException e) {
+                    log.warn("Coulden't parse/connect to League: " + ScraperConstants.URL + href + "/page/" + pageNumber + "\n", e);
+                }
+
+                // Parse the content of each thread-post
+                if (!shopLinks.isEmpty()) {
+
+
+                    for (String shopLink : shopLinks) {
+                        log.info("###### Parsing forum thread: " + shopLink + " ######");
+                        try {
+
+                            indexedShops.add(forumThreadParser.readForumLinksShops(shopLink));
+
+                        } catch (Exception e) {
+                            log.warn("Couldent parse/connect to Thread: " + ScraperConstants.URL + shopLink + "\n");
+                        }
+                    }
+
+                }
+
+
+            }
         }
-        System.out.println("##");
     }
 }

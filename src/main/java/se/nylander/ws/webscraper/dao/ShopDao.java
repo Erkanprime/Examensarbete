@@ -8,4 +8,10 @@ import se.nylander.ws.webscraper.model.Shop;
 public interface ShopDao {
 
     void save(Shop shop);
+
+    Shop getLatestIndexed(String league);
+
+    Shop getShopByNameAndLeague(String league, String shopName);
+
+    Shop update(Shop shop);
 }

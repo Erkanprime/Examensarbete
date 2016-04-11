@@ -19,7 +19,7 @@ public class ForumIndexerTask {
     @Autowired
     private ForumLeagueParser indexer;
 
-    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 1200000)
     public void indexForumThreads() {
         BasicConfigurator.configure();
         log.info("\n###### Starting Indexer Schedule job ######\n");

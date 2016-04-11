@@ -61,8 +61,6 @@ public class ForumThreadParser {
                             .filter(tr -> !tr.select("div.sticky.off").isEmpty())
                             .map(title -> title.select("div.title").get(0).child(0).attributes().get("href"))
                             .collect(Collectors.toList());
-
-            Collections.reverse(threads); //Temporärt
             return threads;
         } catch (IOException e) {
             throw e;
@@ -101,7 +99,6 @@ public class ForumThreadParser {
 
         System.out.println("##");
         shopService.save(currentShop);
-
         return currentShop;
     }
 
