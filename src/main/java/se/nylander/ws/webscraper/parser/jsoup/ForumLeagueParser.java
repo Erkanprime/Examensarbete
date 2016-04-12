@@ -68,11 +68,13 @@ public class ForumLeagueParser {
 
 
 
-        for (String href : forumLinks.values()) {
+        for (Map.Entry<String, String> entry : forumLinks.entrySet()) {
+            final String league = entry.getKey();
+            final String href = entry.getValue();
+            Integer amountOfPages = league.equals(ScraperConstants.STANDARD_HARDCORE_LEAGUE)
+                    || league.equals(ScraperConstants.STANDARD_LEAGUE) ? 2 : 4; //Mycket mindre indexering behövs på permantenta ligor
 
-            final Optional<Shop> lastIndexShop = shopService.getLatestIndexed(href);
-
-            for (int pageNumber=1; pageNumber < 3; pageNumber++) {
+            for (int pageNumber=1; pageNumber < amountOfPages; pageNumber++) {
 
 
                 log.info("###############################################");
@@ -80,12 +82,8 @@ public class ForumLeagueParser {
                 log.info("###############################################");
 
                 try {
-                    forumThreadParser.setCurrentLeague(href);
+                    forumThreadParser.setCurrentLeague(league);
                     shopLinks = forumThreadParser.extractShopLinks(href + "/page/" + pageNumber);
-
-                    if (!lastIndexShop.isPresent()) {
-                        Collections.reverse(shopLinks); //Temporärt för första gången man kör
-                    }
 
                 } catch (IOException e) {
                     log.warn("Coulden't parse/connect to League: " + ScraperConstants.URL + href + "/page/" + pageNumber + "\n", e);

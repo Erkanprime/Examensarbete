@@ -19,13 +19,14 @@ public class ForumIndexerTask {
     @Autowired
     private ForumLeagueParser indexer;
 
-    @Scheduled(fixedRate = 1200000)
+    @Scheduled(fixedDelay = 60000 * 10)
     public void indexForumThreads() {
         BasicConfigurator.configure();
         log.info("\n###### Starting Indexer Schedule job ######\n");
         //ForumLeagueParser indexer = new ForumLeagueParser();
         indexer.initForumParsing();
         indexer.startForumParsing();
+        log.info("###### Ending Indexer Schedule job ######");
     }
 
 }

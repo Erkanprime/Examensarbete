@@ -11,7 +11,7 @@ public interface ShopDao {
 
     Shop getLatestIndexed(String league);
 
-    Shop getShopByNameAndLeague(String league, String shopName);
+    Shop getShopByThreadAndLeague(String league, String thread);
 
     Shop update(Shop shop);
 }

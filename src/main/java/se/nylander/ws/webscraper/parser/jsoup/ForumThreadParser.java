@@ -93,12 +93,12 @@ public class ForumThreadParser {
             currentShop.setTradeItems(findTradeItemPrices(tradeItems.get(), htmlBody));
 
         }
-
+        /*
         log.info("Fetched shop: " + currentShop.getShopName() + " Owner: " + currentShop.getShopOwner()
                 + "Last edited: " + currentShop.getLastEdited() + " Number of items: " + currentShop.getTradeItems().size());
+        */
 
-        System.out.println("##");
-        shopService.save(currentShop);
+        shopService.saveOrUpdate(currentShop);
         return currentShop;
     }
 

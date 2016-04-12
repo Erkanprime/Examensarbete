@@ -36,4 +36,8 @@ public final class ScraperConstants {
 
     public static final String URL = "http://www.pathofexile.com";
 
+    public static final String STANDARD_HARDCORE_LEAGUE = "Hardcore Trading - Shops";
+    public static final String STANDARD_LEAGUE = "Standard Trading - Shops";
+
+
 }

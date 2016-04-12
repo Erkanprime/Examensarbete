@@ -9,12 +9,11 @@ import java.util.Optional;
  */
 public interface ShopService {
 
-    void save(Shop shop);
+    void saveOrUpdate(Shop shop);
 
     Optional<Shop> getLatestIndexed(String league);
 
-    Optional<Shop> getShopByNameAndLeague(String league, String shopName);
+    Optional<Shop> getShopByThreadAndLeague(String league, String thread);
 
-    Shop update(Shop shop);
 
 }
